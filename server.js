@@ -1,6 +1,9 @@
 // require express.js
 const express = require("express");
 
+// tell our app to use that port if it has been set, and if not, default to port 3001
+const PORT = process.env.PORT || 3001;
+
 // instantiate the server & assign "express" so we can chain methods to express.js server
 const app = express();
 
@@ -68,6 +71,6 @@ app.get("/api/animals", (req, res) => {
 
 // chain the listen() method to make the server listen
 // 3001 is the port (the exact destination on the host)
-app.listen(3001, () => {
-  console.log(`API server now on port 3001!`);
+app.listen(PORT, () => {
+  console.log(`API server now on port ${PORT}!`);
 });
