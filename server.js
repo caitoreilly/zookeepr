@@ -57,6 +57,12 @@ function filterByQuery(query, animalsArray) {
   return filteredResults;
 }
 
+// findById() function that takes in the id and array of the animals & returns a single animal object
+function findById(id, animalsArray) {
+  const result = animalsArray.filter((animal) => animal.id === id)[0];
+  return result;
+}
+
 // add the route --> in get() method 1st argument is a string that describes route the client will fetch from
 // 2nd argument is callback function that will execute every time route is accessed w/ GET request
 // send() method from the res parameter(response) to send string Hello to client
@@ -67,6 +73,17 @@ app.get("/api/animals", (req, res) => {
     results = filterByQuery(req.query, results);
   }
   res.json(results);
+});
+
+// create new GET route for animals with property req.params & add :id to end of route
+app.get("/api/animals/:id", (req, res) => {
+  const result = findById(req.params.id, animals);
+  // if no record exists for the animal being searched for, the client receives 404 error
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
 });
 
 // chain the listen() method to make the server listen
