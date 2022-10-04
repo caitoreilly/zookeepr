@@ -7,8 +7,20 @@ const PORT = process.env.PORT || 3001;
 // instantiate the server & assign "express" so we can chain methods to express.js server
 const app = express();
 
+// // parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+
+// //parse incoming JSON data
+app.use(express.json());
+
 // require data from animals.json
 const { animals } = require("./data/animals");
+
+// import and use fs library to write data to animals.json
+const fs = require("fs");
+
+// import path library (module in Node.js API) that provides utilities for working w/ file and directory paths - makes working w/ file sys more predictable
+const path = require("path");
 
 // create function & take in req.query as argument and filter thru the animals
 // return new filtered array
@@ -63,6 +75,40 @@ function findById(id, animalsArray) {
   return result;
 }
 
+// createNewAnimal function that accepts the POST route's req.body value & array we want to add the data to (aniamalsArray)
+function createNewAnimal(body, animalsArray) {
+  const animal = body;
+  animalsArray.push(animal);
+  fs.writeFileSync(
+    path.join(__dirname, "./data/animals.json"),
+    JSON.stringify({ animals: animalsArray }, null, 2)
+  );
+  // need to save js array data as JSON so use JSON.stringify() to convert it
+  // null argument = means we don't want to edit any existing data
+  // 2 argument = means we want to create white space betw our values to make it more readable
+  // these make the animals.json file easier to read!
+
+  // return finished code to post route for response
+  return animal;
+}
+
+// validation function
+function validateAnimal(animal) {
+  if (!animal.name || typeof animal.name !== "string") {
+    return false;
+  }
+  if (!animal.species || typeof animal.species !== "string") {
+    return false;
+  }
+  if (!animal.diet || typeof animal.diet !== "string") {
+    return false;
+  }
+  if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+    return false;
+  }
+  return true;
+}
+
 // add the route --> in get() method 1st argument is a string that describes route the client will fetch from
 // 2nd argument is callback function that will execute every time route is accessed w/ GET request
 // send() method from the res parameter(response) to send string Hello to client
@@ -83,6 +129,23 @@ app.get("/api/animals/:id", (req, res) => {
     res.json(result);
   } else {
     res.send(404);
+  }
+});
+
+// create POST route on server that accepts data to be used or stored server-side
+app.post("/api/animals", (req, res) => {
+  // req.body is where our incoming content will be - where we access data on server side & do something w/ it
+  // using res.json() to send the data back to the client
+  // set id based on what the next index of the array will be
+  req.body.id = animals.length.toString();
+
+  // if any data in req.body is incorrect, send 400 error back
+  if (!validateAnimal(req.body)) {
+    res.status(400).send("The animal is not properly formatted.");
+  } else {
+    // add animal to json file and animals array in this function
+    const animal = createNewAnimal(req.body, animals);
+    res.json(animal);
   }
 });
 
