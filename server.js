@@ -13,6 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 // //parse incoming JSON data
 app.use(express.json());
 
+/* add middleware to instruct server to make frontend code files in public folder available/accessible (make the 
+  files static resources) without having to create specific server endpoints for the frontend code  */
+app.use(express.static("public"));
+
 // require data from animals.json
 const { animals } = require("./data/animals");
 
@@ -21,6 +25,7 @@ const fs = require("fs");
 
 // import path library (module in Node.js API) that provides utilities for working w/ file and directory paths - makes working w/ file sys more predictable
 const path = require("path");
+const { get } = require("http");
 
 // create function & take in req.query as argument and filter thru the animals
 // return new filtered array
@@ -147,6 +152,21 @@ app.post("/api/animals", (req, res) => {
     const animal = createNewAnimal(req.body, animals);
     res.json(animal);
   }
+});
+
+// add a route to server.js that serves index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+// add route that serves & takes us to animals.html
+app.get("/animals", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/animals.html"));
+});
+
+// add route that serves up the zookeepers.html file
+app.get("/zookeeprs", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/zookeepers.html"));
 });
 
 // chain the listen() method to make the server listen
