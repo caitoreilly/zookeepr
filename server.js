@@ -33,8 +33,8 @@ const { animals } = require("./data/animals");
 const fs = require("fs");
 
 // import path library (module in Node.js API) that provides utilities for working w/ file and directory paths - makes working w/ file sys more predictable
-// const path = require("path");
-// const { get } = require("http");
+const path = require("path");
+const { get } = require("http");
 
 // chain the listen() method to make the server listen
 // 3001 is the port (the exact destination on the host)

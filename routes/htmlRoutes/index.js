@@ -12,7 +12,7 @@ router.get("/animals", (req, res) => {
 });
 
 // add route that serves up the zookeepers.html file
-router.get("/zookeeprs", (req, res) => {
+router.get("/zookeepers", (req, res) => {
   res.sendFile(path.join(__dirname, "../../public/zookeepers.html"));
 });
 
