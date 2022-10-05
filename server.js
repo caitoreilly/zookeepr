@@ -17,24 +17,24 @@ app.use(express.urlencoded({ extended: true }));
 // //parse incoming JSON data
 app.use(express.json());
 
-/* tell server that any time a client navigates to <ourhost>/api, the app will use the router set up in 
-apiRoutes. if / is the endpoint, the router will serve back our HTML routes*/
-app.use('/api', apiRoutes);
-app.use('/', htmlRoutes);
-
 /* add middleware to instruct server to make frontend code files in public folder available/accessible (make the 
   files static resources) without having to create specific server endpoints for the frontend code  */
 app.use(express.static("public"));
 
-// require data from animals.json
-const { animals } = require("./data/animals");
+/* tell server that any time a client navigates to <ourhost>/api, the app will use the router set up in 
+apiRoutes. if / is the endpoint, the router will serve back our HTML routes*/
+app.use("/api", apiRoutes);
+app.use("/", htmlRoutes);
 
-// import and use fs library to write data to animals.json
-const fs = require("fs");
+// // require data from animals.json
+// const { animals } = require("./data/animals");
 
-// import path library (module in Node.js API) that provides utilities for working w/ file and directory paths - makes working w/ file sys more predictable
-const path = require("path");
-const { get } = require("http");
+// // import and use fs library to write data to animals.json
+// const fs = require("fs");
+
+// // import path library (module in Node.js API) that provides utilities for working w/ file and directory paths - makes working w/ file sys more predictable
+// const path = require("path");
+// const { get } = require("http");
 
 // chain the listen() method to make the server listen
 // 3001 is the port (the exact destination on the host)
